@@ -6,8 +6,14 @@ name: Workflow CI
 on:
   pull_request:
     branches: [ '*' ]
+    paths-ignore:
+      - '.gitignore'
+      - 'README.md'
   push:
-    branches: [ '*' ]
+    branches: [ 'master' ]
+    paths-ignore:
+      - '.gitignore'
+      - 'README.md'
 
 jobs:
   tests:
