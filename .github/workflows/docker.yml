@@ -1,0 +1,30 @@
+name: Docker Build
+
+on:
+  workflow_call:
+    inputs:
+      branch: [ 'master' ]
+      paths-ignore:
+        - '.gitignore'
+        - 'README.md'
+
+job:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Build and push docker images
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          plataforms: linux/amd64,linux/arm64
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USER }}/allbooks_api:${{ github.ref_name }}
